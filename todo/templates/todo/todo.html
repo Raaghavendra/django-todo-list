@@ -1,0 +1,44 @@
+{% extends 'todo/base.html' %}
+
+{% block content %}
+<div class="form-group col-lg-4 col-md-6 col-sm-12 mx-auto">
+	<h2>Create Todos</h2>
+	<form method="POST">
+		{% csrf_token %}
+		{% if error %}
+			<p class="text-danger">{{ error }}</p>
+		{% endif %}
+		{{ form.as_p }}
+		<button type="submit" class="btn btn-primary">create</button>
+	</form>
+</div>
+<hr>
+	<div style="display: inline-flex;">
+		{% if pendingList == False %}
+		<h2>Completed Todos</h2>
+		<a style="margin-top: 10px; margin-left:20px" href="{% url 'currenttodos' %}">View current todos</a>
+		{% else %}
+		<h2>Pending Todos</h2>
+		<a style="margin-top: 10px; margin-left:20px" href="{% url 'completedtodos' %}">View completed todos</a>
+		{% endif %}
+	</div>
+	<br>
+	<div style="display: inline-flex;">
+		{% for todo in todos %}
+		<div class="card bg-dark text-white" style="width: 15rem; margin:5px;"> <div class="card-body">
+			<a class="text card-title" href="{% url 'viewtodo' todo.id %}"><h5 >{{ todo.title }} {% if todo.important %} ⭐ {% endif %}	</h5> </a>
+			<p class="card-text">{{ todo.description|truncatechars:50 }}</p>
+			{% if pendingList %}
+			<p class="card-text" style="font-size: 10px">{{ todo.datecreated }}</p>
+			<a class="btn btn-success" href="{% url 'completetodo' todo.id %}">&#10003</a>
+			<a class="btn btn-danger" href="{% url 'deletetodo' todo.id 'current' %}">&#10007</a>
+			{% else %}
+			<p class="card-text" style="font-size: 15px">{{ todo.datecompleted }}</p>
+			<a class="btn btn-danger" href="{% url 'deletetodo' todo.id 'complete' %}">&#10007</a>
+			{% endif %}
+		</div> </div>
+		{% endfor %}
+	</div>
+{% endblock %}
+
+
