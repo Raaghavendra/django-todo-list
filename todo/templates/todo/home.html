@@ -1,6 +1,15 @@
 {% extends 'todo/base.html' %}
 
 {% block content %}
-{% endblock %}
+<div class="mt-5 col-lg-4 col-md-6 col-sm-12 mx-auto">
+<h1 class="alert alert-info">Welcome to Todo app</h1>
+{% if user.is_authenticated %}
+    <a class="nav-item nav-link" href="{% url 'currenttodos' %}">Create/View Todos</a>
+{% else%}
+    <p class="font-weight-light">Login / Signup to create your todos....</p>
+    <a class="nav-item nav-link" href="{% url 'signupuser' %}"> Sign up</a>
+    <a class="nav-item nav-link" href="{% url 'loginuser' %}"> Login</a>
+{% endif%}
+</div>
 
-<h1>Home page</h1>
+{% endblock %}

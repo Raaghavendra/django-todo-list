@@ -8,7 +8,7 @@ from datetime import datetime
 
 # Create your views here.
 def home(request):
-	return render(request, 'todo/login.html')
+	return render(request, 'todo/home.html')
 
 def signupuser(request):
 	if request.method == 'GET':
@@ -59,7 +59,7 @@ def currenttodos(request):
 			newtodo = form.save(commit=False)
 			newtodo.user = request.user
 			newtodo.save()
-			return redirect(currenttodos)
+			return redirect('currenttodos')
 		except ValueError:
 			return render(request, 'todo/todo.html', {'form':TodoForm(), 'error':'Bad input. try again !'})
 
@@ -73,24 +73,22 @@ def viewtodo(request, todo_pk):
 		try:
 			form = TodoForm(request.POST, instance=todo)
 			form.save()
-			return redirect(currenttodos)
+			return redirect('currenttodos')
 		except ValueError:
 			return render(request, 'todo/viewtodo.html', {'form':form, 'error':'Bad input. try again !'})
 
 def completetodo(request, todo_pk):
-	print(request)
 	todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
 	todo.status = True
 	todo.datecompleted = datetime.now()
 	todo.save()
-	return redirect(currenttodos)
+	return redirect('currenttodos')
 
 def deletetodo(request, todo_pk, pending):
-	print(request)
 	todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
 	todo.delete()
 	if pending == "current":
-		return redirect(currenttodos)
+		return redirect('currenttodos')
 	else:
 		return redirect(completedtodos)
 
@@ -99,12 +97,11 @@ def completedtodos(request):
 		todos = Todo.objects.filter(user=request.user, status=True)
 		return render(request, 'todo/todo.html', {'form':TodoForm(), 'todos':todos, 'pendingList':False})
 	else: #POST
-		print("log raaghav")
 		try:
 			form = TodoForm(request.POST)
 			newtodo = form.save(commit=False)
 			newtodo.user = request.user
 			newtodo.save()
-			return redirect(currenttodos)
+			return redirect('currenttodos')
 		except ValueError:
 			return render(request, 'todo/todo.html', {'form':TodoForm(), 'error':'Bad input. try again !'})

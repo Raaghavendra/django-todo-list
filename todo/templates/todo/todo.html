@@ -1,32 +1,40 @@
 {% extends 'todo/base.html' %}
 
 {% block content %}
-<div class="form-group col-lg-4 col-md-6 col-sm-12 mx-auto">
+
+<div class="form-group">
 	<h2>Create Todos</h2>
 	<form method="POST">
 		{% csrf_token %}
-		{% if error %}
-			<p class="text-danger">{{ error }}</p>
-		{% endif %}
-		{{ form.as_p }}
-		<button type="submit" class="btn btn-primary">create</button>
+		<div class="form-group">
+			<input type="text" name="title" class="form-control" id="title" placeholder="Title" size="50" required>
+		</div>
+		<div class="form-group">
+			<textarea name="memo" class="form-control" id="description" placeholder="Memo" cols="35"></textarea>
+		</div>
+		<div class="form-group form-check">
+			<input type="checkbox" name="important" class="form-check-input" id="important">
+			<label class="form-check-label" for="important">Important</label>
+		</div>
+		<button type="submit" class=" lelement btn btn-primary">Save</button>
 	</form>
 </div>
 <hr>
-	<div style="display: inline-flex;">
+	<div">
 		{% if pendingList == False %}
-		<h2>Completed Todos</h2>
-		<a style="margin-top: 10px; margin-left:20px" href="{% url 'currenttodos' %}">View current todos</a>
+		<h2 style="margin-left: 10px; display: inline-block;">Completed Todos</h2>
+		<a style="margin-top: 10px; margin-left:20px; display: inline-block;" href="{% url 'currenttodos' %}">View current todos</a>
 		{% else %}
-		<h2>Pending Todos</h2>
-		<a style="margin-top: 10px; margin-left:20px" href="{% url 'completedtodos' %}">View completed todos</a>
+		<h2 style="margin-left: 10px; display: inline-block;">Pending Todos</h2>
+		<a style="margin-top: 10px; margin-left:20px; display: inline-block;" href="{% url 'completedtodos' %}">View completed todos</a>
 		{% endif %}
 	</div>
 	<br>
-	<div style="display: inline-flex;">
+	<div>
 		{% for todo in todos %}
-		<div class="card bg-dark text-white" style="width: 15rem; margin:5px;"> <div class="card-body">
-			<a class="text card-title" href="{% url 'viewtodo' todo.id %}"><h5 >{{ todo.title }} {% if todo.important %} ⭐ {% endif %}	</h5> </a>
+		<div class="card bg-dark text-white " style="width: 15rem; margin:5px; border-radius: 15px; display: inline-block; vertical-align: text-top;"> 
+			<div class="card-body">
+			<a style="color: bisque;text-decoration: none;" class="text card-title" href="{% url 'viewtodo' todo.id %}"><h5 >{{ todo.title }} {% if todo.important %} ⭐ {% endif %}	</h5> </a>
 			<p class="card-text">{{ todo.description|truncatechars:50 }}</p>
 			{% if pendingList %}
 			<p class="card-text" style="font-size: 10px">{{ todo.datecreated }}</p>
