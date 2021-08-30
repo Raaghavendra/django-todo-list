@@ -15,18 +15,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from django.urls.conf import include
 from todo import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('',views.home, name='home'),
     
-    #auth
+    # Auth
     path('signup/', views.signupuser, name='signupuser'),
     path('login/', views.loginuser, name='loginuser'),
     path('logout/', views.logoutuser, name='logoutuser'),
 
-    #todo
+    # todo
     # path('todos/', views.currenttodos, name='currenttodos'),
     path('todos/<int:todo_pk>', views.viewtodo, name='viewtodo'),
     path('todos/<int:todo_pk>/completetodo', views.completetodo, name='completetodo'),
@@ -34,6 +35,7 @@ urlpatterns = [
     path('todos/currenttodos', views.currenttodos, name='currenttodos'),
     path('todos/completedtodos', views.completedtodos, name='completedtodos'),
 
-
+    # API
+    path('api/', include('api.urls'))
 
 ]

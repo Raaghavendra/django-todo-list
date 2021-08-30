@@ -32,7 +32,7 @@ def loginuser(request):
 	if request.method == 'GET':
 		return render(request, 'todo/login.html')
 	else:
-		user = authenticate(username=request.POST['username'],password=request.POST['password'])
+		user = authenticate(request,username=request.POST['username'],password=request.POST['password'])
 		print(request.POST['username'],request.POST['password'], user)
 		if user is not None:
 		    # A backend authenticated the credentials
@@ -50,19 +50,23 @@ def logoutuser(request):
 
 
 def currenttodos(request):
-	if request.method == "GET":
-		todos = Todo.objects.filter(user=request.user, status=False)
-		return render(request, 'todo/todo.html', {'form':TodoForm(), 'todos':todos, 'pendingList':True})
-	else: #POST
-		try:
-			form = TodoForm(request.POST)
-			newtodo = form.save(commit=False)
-			newtodo.user = request.user
-			newtodo.save()
-			return redirect('currenttodos')
-		except ValueError:
-			return render(request, 'todo/todo.html', {'form':TodoForm(), 'error':'Bad input. try again !'})
+	if request.user.is_authenticated:
+		if request.method == "GET":
+			todos = Todo.objects.filter(user=request.user, status=False)
+			return render(request, 'todo/todo.html', {'form':TodoForm(), 'todos':todos, 'pendingList':True})
+		else: #POST
+			try:
+				form = TodoForm(request.POST)
+				newtodo = form.save(commit=False)
+				newtodo.user = request.user
+				newtodo.save()
+				return redirect('currenttodos')
+			except ValueError:
+				return render(request, 'todo/todo.html', {'form':TodoForm(), 'error':'Bad input. try again !'})
+	else:
+		return render(request, 'todo/home.html', {'error':'Please login to view !'})
 
+# view and create new todo
 def viewtodo(request, todo_pk):
 	todo = get_object_or_404(Todo, pk=todo_pk, user=request.user)
 	

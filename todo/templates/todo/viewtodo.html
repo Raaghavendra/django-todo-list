@@ -2,14 +2,14 @@
 
 {% block content %}
 	<div class="card bg-dark text-white" style="width: 25rem; margin:5px;"> <div class="card-body">
-		<h5 class="card-title">{{ todo.title }} {% if todo.important %} ⭐ {% endif %}	</h5>
+		<h5 style="color:sandybrown;" class="card-title">{{ todo.title }} {% if todo.important %} ⭐ {% endif %}	</h5>
 		<p class="card-text">{{ todo.description }}</p>
 		<p class="card-text" style="font-size: 10px">{{ todo.datecreated }}</p>
 		<a class="btn btn-success" href="{% url 'completetodo' todo.id %}">&#10003</a>
 		<a class="btn btn-danger" href="{% url 'deletetodo' todo.id 'current'%}">&#10007</a>
 	</div> </div>
-	<h2>Edit Todo</h2>
-	<form method="POST">
+	<form method="POST" class="myform form-group">
+		<h2 class="formheadder">Edit Todo</h2>
 		{% csrf_token %}
 		{% if error %}
 			<p class="text-danger">{{ error }}</p>
